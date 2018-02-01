@@ -1,0 +1,26 @@
+version: '2'
+services:
+    spade:
+        image: chverma/ubuntu-dlib-pip2-spade
+        container_name: spade_container
+        restart: always
+        command: bash -c "cd /root/spade/ && python configure.py "localhost" && runspade.py"
+
+    # coordinator:
+    #     image: chverma/ubuntu-dlib-pip2-spade
+    #     container_name: server_container
+    #     restart: always
+    #     command: bash -c "cd /root/spade/ && python configure.py "localhost" && runspade.py"
+
+    nginx:
+        image: nginx:1.13
+        container_name: nginx_container
+        # volumes:
+        #     - ./config/default.conf:/etc/nginx/conf.d/default.conf
+        # ports:
+        #     - "${NGINX_PORT}:80"
+        links:
+            - spade
+
+volumes:
+    models:
