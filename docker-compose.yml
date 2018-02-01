@@ -6,11 +6,13 @@ services:
         restart: always
         command: bash -c "cd /root/spade/ && python configure.py "localhost" && runspade.py"
 
-    # coordinator:
-    #     image: chverma/ubuntu-dlib-pip2-spade
-    #     container_name: server_container
-    #     restart: always
-    #     command: bash -c "cd /root/spade/ && python configure.py "localhost" && runspade.py"
+    coordinator:
+        image: chverma/ubuntu-dlib-pip2-spade
+        container_name: coordinator_container
+        restart: always
+        volumes:
+          - ./emotion-group-recognition:/egr
+        command: bash -c "cd /egr/ && python agentCoordinator.py"
 
     nginx:
         image: nginx:1.13
