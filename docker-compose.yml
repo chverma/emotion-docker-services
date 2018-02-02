@@ -8,20 +8,21 @@ services:
         volumes:
           - ./runSpade.sh:/root/spade/runSpade.sh
         ports:
-          # - ${SPADE_SERVER}:5222
-          - 8008:8008
+          - ${SPADE_SERVER}:5222
+          - ${SPADE_HTTP_SERVER}:8008
 
     coordinator:
         image: chverma/ubuntu-dlib-pip2-spade
         container_name: coordinator_agent
-        # restart: always
+        restart: always
         volumes:
           - ./emotion-group-recognition:/egr
-        command: bash -c "cd /egr/ && ./runCoordinator.sh" #python agentCoordinator.py"
-        # depends_on:
-        #   - spade
-        # links:
-        #   - spade
+        command: bash -c "cd /egr/ && ./runCoordinator.sh"
+        depends_on:
+          - spade
+        links:
+          - spade
+          - face_recognizer
 
     predictor:
         image: chverma/ubuntu-dlib-pip2-spade
@@ -29,11 +30,11 @@ services:
         restart: always
         volumes:
           - ./emotion-group-recognition:/egr
-        command: bash -c "cd /egr/ && ./runClassificator.sh" #python agentCoordinator.py"
-        # depends_on:
-        #   - spade
-        # links:
-        #   - spade
+        command: bash -c "cd /egr/ && ./runClassificator.sh"
+        depends_on:
+          - spade
+        links:
+          - spade
 
     face_recognizer:
         image: chverma/ubuntu-dlib-pip2-spade
@@ -41,10 +42,9 @@ services:
         # restart: always
         volumes:
           - ./emotion-group-recognition:/egr
-        command: bash -c "cd /egr/face_recognizer_server && python web_server.py" #python agentCoordinator.py"
+        command: bash -c "pip install flask && cd /egr/face_recognizer_server && python web_server.py" #python agentCoordinator.py"
         ports:
-          # - ${SPADE_SERVER}:5222
-          - 5001:5001
+          - ${FACE_REC_SERVER_PORT}:5001
 
     # nginx:
     #     image: nginx:1.13
