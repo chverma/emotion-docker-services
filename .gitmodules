@@ -1,3 +1,6 @@
 [submodule "emotion-group-recognition"]
 	path = emotion-group-recognition
 	url = git@github.com:chverma/emotion-group-recognition.git
+[submodule "emotion-webserver"]
+	path = emotion-webserver
+	url = git@github.com:chverma/emotion-webserver.git
