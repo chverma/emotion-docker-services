@@ -39,10 +39,10 @@ services:
     face_recognizer:
         image: chverma/ubuntu-dlib-pip2-spade
         container_name: face_recognizer_web
-        # restart: always
+        restart: always
         volumes:
           - ./emotion-group-recognition:/egr
-        command: bash -c "pip install flask && cd /egr/face_recognizer_server && python web_server.py" #python agentCoordinator.py"
+        command: bash -c "cd /egr/face_recognizer_server && python web_server.py"
         ports:
           - ${FACE_REC_SERVER_PORT}:5001
 
