@@ -47,14 +47,20 @@ services:
           - ${FACE_REC_SERVER_PORT}:5001
 
     web_server:
-        image: node
+        image: chverma/node-spade
         container_name: web_server
         restart: always
         volumes:
           - ./emotion-webserver:/webserver
-        command: bash -c "cd /webserver && ./run.sh"
+        command: bash -c "cd /webserver && npm i && ./run.sh"
         ports:
           - ${WEB_SERVER_PORT}:3000
+        depends_on:
+          - spade
+          - predictor
+          - coordinator
+        links:
+          - spade
 
     # nginx:
     #     image: nginx:1.13
