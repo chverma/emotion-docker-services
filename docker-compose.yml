@@ -4,7 +4,8 @@ services:
         image: chverma/ubuntu-dlib-pip2-spade
         container_name: spade_server
         restart: always
-        command: bash -c "cd /root/spade/ && ./runSpade.sh"
+        command: ./runSpade.sh
+        working_dir: /root/spade
         volumes:
           - ./runSpade.sh:/root/spade/runSpade.sh
         ports:
@@ -15,9 +16,10 @@ services:
         image: chverma/ubuntu-dlib-pip2-spade
         container_name: coordinator_agent
         restart: always
+        working_dir: /egr
         volumes:
           - ./emotion-group-recognition:/egr
-        command: bash -c "cd /egr/ && ./runCoordinator.sh"
+        command: runCoordinator.sh
         depends_on:
           - spade
 
@@ -25,9 +27,10 @@ services:
         image: chverma/ubuntu-dlib-pip2-spade
         container_name: predictor_agent
         restart: always
+        working_dir: /egr
         volumes:
           - ./emotion-group-recognition:/egr
-        command: bash -c "cd /egr/ && ./runClassificator.sh"
+        command: runClassificator.sh
         depends_on:
           - spade
 
@@ -35,9 +38,10 @@ services:
         image: chverma/ubuntu-dlib-pip2-spade
         container_name: face_recognizer_web
         restart: always
+        working_dir: /egr/face_recognizer_server
         volumes:
           - ./emotion-group-recognition:/egr
-        command: bash -c "cd /egr/face_recognizer_server && python web_server.py"
+        command: python web_server.py
         ports:
           - ${FACE_REC_SERVER_PORT}:5001
 
@@ -45,9 +49,10 @@ services:
         image: chverma/node-spade
         container_name: web_server
         restart: always
+        working_dir: /webserver
         volumes:
           - ./emotion-webserver:/webserver
-        command: bash -c "cd /webserver && npm i && ./run.sh"
+        command: bash -c "npm i && ./run.sh"
         ports:
           - ${WEB_SERVER_PORT}:3000
         depends_on:
