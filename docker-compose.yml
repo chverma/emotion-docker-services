@@ -20,9 +20,6 @@ services:
         command: bash -c "cd /egr/ && ./runCoordinator.sh"
         depends_on:
           - spade
-        links:
-          - spade
-          - face_recognizer
 
     predictor:
         image: chverma/ubuntu-dlib-pip2-spade
@@ -32,8 +29,6 @@ services:
           - ./emotion-group-recognition:/egr
         command: bash -c "cd /egr/ && ./runClassificator.sh"
         depends_on:
-          - spade
-        links:
           - spade
 
     face_recognizer:
@@ -59,8 +54,6 @@ services:
           - spade
           - predictor
           - coordinator
-        links:
-          - spade
 
     nginx:
         image: nginx:1.13
@@ -69,7 +62,3 @@ services:
             - ./config/default.conf:/etc/nginx/conf.d/default.conf
         ports:
             - "${NGINX_PORT}:80"
-        links:
-            - spade
-            - web_server
-            - face_recognizer
